@@ -13,6 +13,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val repository = Repository()
     private val listTexts = repository.getData()
+    private lateinit var listTextViews: List<TextView>
     private var preference: SharedPreferences? = null
 
     companion object {
@@ -29,14 +30,16 @@ class MainActivity : AppCompatActivity() {
         val textView1 = binding.xTextView1
         val textView2 = binding.xTextView2
         val textView3 = binding.xTextView3
-        val listTextViews = listOf(textView1, textView2, textView3)
+        listTextViews = listOf(textView1, textView2, textView3)
 
         preference = getSharedPreferences("TABLE", Context.MODE_PRIVATE)
 
         getDataFromMemory(listTexts)
-        toEditText(repository.list)
-        getText(listTextViews)
-        setText(listTextViews)
+        toEditText(listTexts)
+        getText(listTexts)
+        onClickClearAll(listTexts, listTextViews)
+        onClickDeleteItem(listTexts, listTextViews)
+        setText(listTexts, listTextViews)
     }
 
     private fun getDataFromMemory(list: ArrayList<String>) {
@@ -45,20 +48,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setText(list: List<TextView>) {
-        list.forEachIndexed() { index, it ->
-            it.text = repository.list[index]
+    private fun setText(list: ArrayList<String>, listTV: List<TextView>) {
+        listTV.forEachIndexed { index, it ->
+            it.text = list[index]
         }
     }
 
-    private fun dataTransmission(list: ArrayList<String>, index: Int, keyItem: String) {
+    private fun dataTransmission(list: ArrayList<String>, indexOfItem: Int, keyItem: String) {
         val intent = Intent(this@MainActivity, ItemActivity::class.java)
-        intent.putExtra(index.toString(), index)
-        if (list[index].isEmpty()) {
-            intent.putExtra(keyItem, "")
-        } else {
-            intent.putExtra(keyItem, list[index])
-        }
+        intent.putExtra(indexOfItem.toString(), indexOfItem)
+        intent.putExtra(keyItem, list[indexOfItem])
         startActivity(intent)
     }
 
@@ -82,73 +81,60 @@ class MainActivity : AppCompatActivity() {
         editor?.apply()
     }
 
-    private fun getText(list: List<TextView>) {
+
+    private fun getText(list: ArrayList<String>) {
         val key = intent.extras?.getInt(ItemActivity.KEY)
         val text = intent.extras?.getString(ItemActivity.KEY_FOR_TEXT)
         if (text != null && key != null) {
-            repository.list[key] = text
+            list[key] = text
             saveData(key, text)
         }
     }
+
+    private fun onClickClearAll(list: ArrayList<String>, listTV: List<TextView>) {
+        binding.xBtnClearAll.setOnClickListener {
+            clearAll(list, listTV)
+        }
+    }
+
+    private fun clearAll(list: ArrayList<String>, listTV: List<TextView>) {
+        val editor = preference?.edit()
+        editor?.clear()
+        editor?.apply()
+        list.forEachIndexed { index, _ ->
+            list[index] = ""
+        }
+        listTV.forEach {
+            it.text = ""
+        }
+    }
+
+    private fun onClickDeleteItem(list: ArrayList<String>, listTV: List<TextView>) {
+        with(binding) {
+            xBtnDelItem1.setOnClickListener {
+                deleteItem(list, listTV, 0)
+            }
+            xBtnDelItem2.setOnClickListener {
+                deleteItem(list, listTV, 1)
+            }
+            xBtnDelItem3.setOnClickListener {
+                deleteItem(list, listTV, 2)
+            }
+        }
+    }
+
+    private fun deleteItem(list: ArrayList<String>, listTV: List<TextView>, index: Int) {
+        //index == key
+        list[index] = ""
+        listTV[index].text = ""
+        val editor = preference?.edit()
+        editor?.remove(index.toString())
+        editor?.apply()
+    }
+
+    override fun onDestroy() {
+//Стирание данных при закрытии приложения
+//        clearAll(listTexts, listTextViews)
+        super.onDestroy()
+    }
 }
-
-
-//    private fun getText(list: List<TextView>) {
-//        keys.forEachIndexed() { index, it ->
-//            val text = intent.extras?.getString(it)
-//            if (text != null) {
-//                listTexts[index] = text
-//            }
-//            setText(list)
-//        }
-//    }
-
-
-//private fun toEditText(list: MutableList<String>) {
-//    binding.xTextView1.setOnClickListener {
-//        val intent = Intent(this@MainActivity, ItemActivity::class.java)
-//        intent.putExtra("0", 0)
-//        if (list[0].isEmpty()){
-//            intent.putExtra("item1", "")
-//        } else {
-//            intent.putExtra("item1", list[0])
-//        }
-//        startActivity(intent)
-//    }
-//    binding.xTextView2.setOnClickListener {
-//        val intent = Intent(this@MainActivity, ItemActivity::class.java)
-//        intent.putExtra("1", 1)
-//        if (list[1].isEmpty()){
-//            intent.putExtra("item2", "")
-//        } else {
-//            intent.putExtra("item2", list[1])
-//        }
-//        startActivity(intent)
-//    }
-//    binding.xTextView3.setOnClickListener {
-//        val intent = Intent(this@MainActivity, ItemActivity::class.java)
-//        intent.putExtra("2", 2)
-//        if (list[2].isEmpty()){
-//            intent.putExtra("item3", "")
-//        } else {
-//            intent.putExtra("item3", list[2])
-//        }
-//        startActivity(intent)
-//    }
-//}
-
-//private fun setText(list: List<TextView>) {
-//    list.forEachIndexed() { index, itTextView ->
-//        if (repository.list.isNotEmpty()) {
-//            list.forEachIndexed() { index, itTextView ->
-//                if (repository.list[index].isNotEmpty()) {
-//                    itTextView.text = repository.list[index]
-//                }
-//            }
-//        } else {
-//            list.forEach {
-//                repository.list.add("")
-//                it.text = ""
-//            }
-//        }
-//}

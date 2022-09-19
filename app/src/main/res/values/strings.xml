@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">EditTextActivityActivity</string>
+    <string name="del">DEL</string>
+    <string name="clear_all">Clear All</string>
+    <string name="add">Add</string>
+    <string name="item_name">Item name</string>
 </resources>
