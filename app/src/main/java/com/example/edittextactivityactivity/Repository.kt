@@ -1,14 +1,18 @@
 package com.example.edittextactivityactivity
 
-import android.widget.EditText
-
 class Repository {
 
-    private val list: MutableList<String> = mutableListOf()
+//    var text1 =""
+//    var text2 =""
+//    var text3 =""
+
+    val list: ArrayList<String> = arrayListOf("", "", "")
+
+//    private val list1: MutableList<String> = mutableListOf(text1, text2, text3)
 
     fun getData() = list
 
-    fun addData(element: String){
+    fun addData(element: String) {
         list.add(element)
     }
 

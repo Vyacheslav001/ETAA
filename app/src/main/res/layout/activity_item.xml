@@ -12,13 +12,14 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:padding="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/xButton"
+        android:inputType="textEmailAddress|textNoSuggestions"
+        app:layout_constraintBottom_toTopOf="@+id/xButtonAdd"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/xButton"
+        android:id="@+id/xButtonAdd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="30dp"
