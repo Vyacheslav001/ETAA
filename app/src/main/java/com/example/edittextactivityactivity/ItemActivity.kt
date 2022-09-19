@@ -13,7 +13,7 @@ class ItemActivity : AppCompatActivity() {
     private val keys = listOf(0, 1, 2)
     private val keysItem = listOf("item1", "item2", "item3")
 
-    companion object{
+    companion object {
         const val KEY = "NumberOfItem"
         const val KEY_FOR_TEXT = "KeyForText"
     }
@@ -22,7 +22,10 @@ class ItemActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityItemBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        sendText()
+    }
 
+    private fun sendText() {
         keys.forEach { itKey ->
             if (itKey == intent.extras?.getInt(itKey.toString())) {
                 with(binding) {
@@ -43,25 +46,3 @@ class ItemActivity : AppCompatActivity() {
         }
     }
 }
-
-
-//keys.forEach { itKey ->
-//    if (itKey == intent.extras?.getInt(itKey.toString())) {
-//        with(binding) {
-//            textItem = intent.extras?.getString(keysItem[itKey]).toString()
-//            val editText = binding.xEditText
-//            editText.setText(textItem)
-//            xTextView.text = keysItem[itKey]
-//            xButton.setOnClickListener {
-//                val text = editText.text.toString()
-//                val intent = Intent(this@ItemActivity, com.example.edittextactivityactivity.MainActivity::class.java)
-//                val index: Int = itKey
-//                intent.putExtra("Item", index)
-//                intent.putExtra("Key", text)
-//                onToast(applicationContext, text)
-//                startActivity(intent)
-//            }
-//        }
-//
-//    }
-//}

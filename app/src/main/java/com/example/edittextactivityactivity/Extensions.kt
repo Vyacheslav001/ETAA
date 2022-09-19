@@ -11,6 +11,6 @@ fun Activity.replaceActivity(activity: Activity) {
     startActivity(intent)
 }
 
-fun Any.onToast(context: Context, text: String){
+fun onToast(context: Context, text: String){
     Toast.makeText(context, text, Toast.LENGTH_LONG).show()
 }

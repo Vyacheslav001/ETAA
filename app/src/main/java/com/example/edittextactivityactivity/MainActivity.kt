@@ -14,9 +14,6 @@ class MainActivity : AppCompatActivity() {
     private val repository = Repository()
     private val listTexts = repository.getData()
     private var preference: SharedPreferences? = null
-//    private var text1 = repository.text1
-//    private var text2 = repository.text2
-//    private var text3 = repository.text3
 
     companion object {
         const val KEY_1 = "item1"
@@ -35,58 +32,26 @@ class MainActivity : AppCompatActivity() {
         val listTextViews = listOf(textView1, textView2, textView3)
 
         preference = getSharedPreferences("TABLE", Context.MODE_PRIVATE)
-        repository.list[0] = preference?.getString("0", "")!!
-        repository.list[1] = preference?.getString("1", "")!!
-        repository.list[2] = preference?.getString("2", "")!!
-//        textView1.text = repository.list[0]
-//        textView2.text = repository.list[1]
-//        textView3.text = repository.list[2]
 
-//        listTexts[0] = preference?.getString("0", "")!!
-//        listTexts[1] = preference?.getString("1", "")!!
-//        listTexts[2] = preference?.getString("2", "")!!
-//        textView1.text = listTexts[0]
-//        textView2.text = listTexts[1]
-//        textView3.text = listTexts[2]
-
-//        repository.text1 = preference?.getString("0", "")!!
-//        repository.text2 = preference?.getString("1", "")!!
-//        repository.text3 = preference?.getString("2", "")!!
-//        textView1.text = repository.text1
-//        textView2.text = repository.text2
-//        textView3.text = repository.text3
-
-//        setText(listTextViews)
+        getDataFromMemory(listTexts)
         toEditText(repository.list)
         getText(listTextViews)
-//        setText(listTextViews)
+        setText(listTextViews)
+    }
+
+    private fun getDataFromMemory(list: ArrayList<String>) {
+        list.forEachIndexed { index, _ ->
+            list[index] = preference?.getString(index.toString(), "")!!
+        }
     }
 
     private fun setText(list: List<TextView>) {
-        list[0].text = repository.list[0]
-        list[1].text = repository.list[1]
-        list[2].text = repository.list[2]
-
-
-//        list.forEachIndexed() { index, itTextView ->
-//            itTextView.text = repository.list[index]
-//        }
-
-//        if (repository.list.isNotEmpty()) {
-//            list.forEachIndexed() { index, itTextView ->
-//                if (repository.list[index].isNotEmpty()) {
-//                    itTextView.text = repository.list[index]
-//                }
-//            }
-//        } else {
-//            list.forEach {
-//                repository.list.add("")
-//                it.text = ""
-//            }
-//        }
+        list.forEachIndexed() { index, it ->
+            it.text = repository.list[index]
+        }
     }
 
-    private fun dataTransmission(list: MutableList<String>, index: Int, keyItem: String) {
+    private fun dataTransmission(list: ArrayList<String>, index: Int, keyItem: String) {
         val intent = Intent(this@MainActivity, ItemActivity::class.java)
         intent.putExtra(index.toString(), index)
         if (list[index].isEmpty()) {
@@ -98,49 +63,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun toEditText(list: ArrayList<String>) {
-        binding.xTextView1.setOnClickListener {
-            val intent = Intent(this@MainActivity, ItemActivity::class.java)
-            intent.putExtra("0", 0)
-            if (list[0].isEmpty()) {
-                intent.putExtra("item1", "")
-            } else {
-                intent.putExtra("item1", list[0])
+        with(binding) {
+            xTextView1.setOnClickListener {
+                dataTransmission(list, 0, KEY_1)
             }
-            startActivity(intent)
-        }
-        binding.xTextView2.setOnClickListener {
-            val intent = Intent(this@MainActivity, ItemActivity::class.java)
-            intent.putExtra("1", 1)
-            if (list[1].isEmpty()) {
-                intent.putExtra("item2", "")
-            } else {
-                intent.putExtra("item2", list[1])
+            xTextView2.setOnClickListener {
+                dataTransmission(list, 1, KEY_2)
             }
-            startActivity(intent)
-        }
-        binding.xTextView3.setOnClickListener {
-            val intent = Intent(this@MainActivity, ItemActivity::class.java)
-            intent.putExtra("2", 2)
-            if (list[2].isEmpty()) {
-                intent.putExtra("item3", "")
-            } else {
-                intent.putExtra("item3", list[2])
+            xTextView3.setOnClickListener {
+                dataTransmission(list, 2, KEY_3)
             }
-            startActivity(intent)
         }
-
-
-//        with(binding) {
-//            xTextView1.setOnClickListener {
-//                dataTransmission(list, 0, KEY_1)
-//            }
-//            xTextView2.setOnClickListener {
-//                dataTransmission(list, 1, KEY_2)
-//            }
-//            xTextView3.setOnClickListener {
-//                dataTransmission(list, 2, KEY_3)
-//            }
-//        }
     }
 
     private fun saveData(key: Int, text: String) {
@@ -153,11 +86,9 @@ class MainActivity : AppCompatActivity() {
         val key = intent.extras?.getInt(ItemActivity.KEY)
         val text = intent.extras?.getString(ItemActivity.KEY_FOR_TEXT)
         if (text != null && key != null) {
-//            repository.list.add(key, text)
             repository.list[key] = text
             saveData(key, text)
         }
-        setText(list)
     }
 }
 
@@ -204,4 +135,20 @@ class MainActivity : AppCompatActivity() {
 //        }
 //        startActivity(intent)
 //    }
+//}
+
+//private fun setText(list: List<TextView>) {
+//    list.forEachIndexed() { index, itTextView ->
+//        if (repository.list.isNotEmpty()) {
+//            list.forEachIndexed() { index, itTextView ->
+//                if (repository.list[index].isNotEmpty()) {
+//                    itTextView.text = repository.list[index]
+//                }
+//            }
+//        } else {
+//            list.forEach {
+//                repository.list.add("")
+//                it.text = ""
+//            }
+//        }
 //}
